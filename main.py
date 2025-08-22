@@ -7,11 +7,17 @@ app = Flask(__name__)
 DOWNLOAD_FOLDER='download'
 os.makedirs(DOWNLOAD_FOLDER,exist_ok=True)
 
+cookies_env = os.getenv("COOKIES_CONTENT")
+if cookies_env:
+    with open("cookies.txt", "w", encoding="utf-8") as f:
+        f.write(cookies_env)
+    print("cookies.txt created from environment variable")
+
+title=''
+
 @app.route("/")
 def index():
     return render_template("index.html")
-
-title=''
 
 # Fetch formats
 @app.route("/fetch", methods=["POST"])
@@ -44,9 +50,6 @@ def fetch_formats():
 
                     formats.append({"quality":f.get('height'),"size":size_str})
                 
-                #for f in formats:
-                #    print(f["quality"],f["size"])
-        
                 def parse_size(size_str):
                     try:
                         return float(size_str.split()[0])
@@ -105,7 +108,8 @@ def download_video():
         if ext=='mp4':
             ydl_opts = {
                     "format": f"bestvideo[height<={quality}]+bestaudio/best",
-                "merge_output_format": "mp4",
+                    cookiefile": "cookies.txt" if cookies_env else None,
+                    "merge_output_format": "mp4",
                    "outtmpl": filepath
             }
         elif ext=='mp3':
