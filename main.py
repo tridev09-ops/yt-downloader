@@ -1,6 +1,6 @@
 from yt_dlp import YoutubeDL
 from flask import Flask, request, Response, render_template, send_file, jsonify, after_this_request
-import subprocess, uuid, os
+import uuid, os
 
 app = Flask(__name__)
 
@@ -108,13 +108,14 @@ def download_video():
         if ext=='mp4':
             ydl_opts = {
                     "format": f"bestvideo[height<={quality}]+bestaudio/best",
-                    cookiefile": "cookies.txt" if cookies_env else None,
+                    "cookiefile": "cookies.txt" if cookies_env else None,
                     "merge_output_format": "mp4",
                    "outtmpl": filepath
             }
         elif ext=='mp3':
             ydl_opts = {
                     "format": "bestaudio/best",
+                    "cookiefile": "cookies.txt" if cookies_env else None,
                     "outtmpl": filepath[:-4],
                     "postprocessors": [{
                     "key": "FFmpegExtractAudio",
