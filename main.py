@@ -108,14 +108,16 @@ def download_video():
         if ext=='mp4':
             ydl_opts = {
                     "format": f"bestvideo[height<={quality}]+bestaudio/best",
-                    "cookiefile": "cookies.txt" if cookies_env else None,
+                    "cookiefile": "cookies.txt",
+                    "verbose": True,
                     "merge_output_format": "mp4",
-                   "outtmpl": filepath
+                    "outtmpl": filepath
             }
         elif ext=='mp3':
             ydl_opts = {
                     "format": "bestaudio/best",
-                    "cookiefile": "cookies.txt" if cookies_env else None,
+                    "cookiefile": "cookies.txt",
+                    "verbose": True,
                     "outtmpl": filepath[:-4],
                     "postprocessors": [{
                     "key": "FFmpegExtractAudio",
