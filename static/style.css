@@ -28,7 +28,7 @@ body {
     height: 40px;
     width: 40px;
     border-radius: 50%;
-    animation: spin 2s ease-in-out infinite;
+    animation: spin 2s linear infinite;
 }
 
 @keyframes spin{

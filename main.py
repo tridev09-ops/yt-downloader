@@ -1,17 +1,17 @@
 from yt_dlp import YoutubeDL
 from flask import Flask, request, Response, render_template, send_file, jsonify, after_this_request
-import subprocess, uuid, os
+import uuid, os
 
 app = Flask(__name__)
 
 DOWNLOAD_FOLDER='download'
 os.makedirs(DOWNLOAD_FOLDER,exist_ok=True)
 
+title=''
+
 @app.route("/")
 def index():
     return render_template("index.html")
-
-title=''
 
 # Fetch formats
 @app.route("/fetch", methods=["POST"])
@@ -44,9 +44,6 @@ def fetch_formats():
 
                     formats.append({"quality":f.get('height'),"size":size_str})
                 
-                #for f in formats:
-                #    print(f["quality"],f["size"])
-        
                 def parse_size(size_str):
                     try:
                         return float(size_str.split()[0])
@@ -104,8 +101,7 @@ def download_video():
         
         if ext=='mp4':
             ydl_opts = {
-                    "format": f"bestvideo[height<={quality}]+bestaudio/best",
-                "merge_output_format": "mp4",
+                    "format": f"bestvideo[height<={quality}]+bestaudio/best", "merge_output_format": "mp4",
                    "outtmpl": filepath
             }
         elif ext=='mp3':
